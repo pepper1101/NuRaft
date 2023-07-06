@@ -429,6 +429,12 @@ public:
         ptr<buffer> buf = config.serialize();
         savedConfig = cluster_config::deserialize(*buf);
     }
+    void peer_disconnected(ptr<peer> pp) {
+
+    }
+    void peer_connected(ptr<peer> pp) {
+        
+    }
     void save_state(const srv_state& state) {
         ptr<buffer> buf = state.serialize();
         savedState = srv_state::deserialize(*buf);

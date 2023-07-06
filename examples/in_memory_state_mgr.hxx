@@ -53,6 +53,13 @@ public:
         saved_config_ = cluster_config::deserialize(*buf);
     }
 
+    void peer_disconnected(ptr<peer> pp) {
+
+    }
+    void peer_connected(ptr<peer> pp) {
+        
+    }
+
     void save_state(const srv_state& state) {
         // Just keep in memory in this example.
         // Need to write to disk here, if want to make it durable.
