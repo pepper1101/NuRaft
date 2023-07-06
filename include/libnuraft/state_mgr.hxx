@@ -55,6 +55,16 @@ public:
     virtual void save_config(const cluster_config& config) = 0;
 
     /**
+     * 
+    */
+   virtual void peer_disconnected(ptr<peer> pp) = 0;
+
+   /**
+    * 
+   */
+   virtual void peer_connected(ptr<peer> pp) = 0;
+
+    /**
      * Save given server state.
      *
      * @param state Server state to save.

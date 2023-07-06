@@ -806,6 +806,11 @@ void raft_server::handle_peer_resp(ptr<resp_msg>& resp, ptr<rpc_exception>& err)
             // waiting for the response.
             handle_join_leave_rpc_err(msg_type::leave_cluster_request, pp);
         }
+
+        if (rpc_errs == raft_server::raft_limits_.warning_limit_) {
+            ctx_->state_mgr_->peer_disconnected(pp);
+        }
+
         return;
     }
 
@@ -831,6 +836,9 @@ void raft_server::handle_peer_resp(ptr<resp_msg>& resp, ptr<rpc_exception>& err)
         if (entry != peers_.end()) {
             peer* pp = entry->second.get();
             int rpc_errs = pp->get_rpc_errs();
+            if (rpc_errs > 0) {
+                ctx_->state_mgr_->peer_connected(entry->second);
+            }
             if (rpc_errs >= raft_server::raft_limits_.warning_limit_) {
                 p_wn("recovered from RPC failure from peer %d, %d errors",
                      resp->get_src(), rpc_errs);
