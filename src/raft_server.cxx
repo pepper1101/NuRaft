@@ -807,7 +807,7 @@ void raft_server::handle_peer_resp(ptr<resp_msg>& resp, ptr<rpc_exception>& err)
             handle_join_leave_rpc_err(msg_type::leave_cluster_request, pp);
         }
 
-        if (rpc_errs == raft_server::raft_limits_.warning_limit_) {
+        if (is_leader() && rpc_errs == raft_server::raft_limits_.warning_limit_) {
             ctx_->state_mgr_->peer_disconnected(pp);
         }
 
@@ -836,7 +836,7 @@ void raft_server::handle_peer_resp(ptr<resp_msg>& resp, ptr<rpc_exception>& err)
         if (entry != peers_.end()) {
             peer* pp = entry->second.get();
             int rpc_errs = pp->get_rpc_errs();
-            if (rpc_errs > 0) {
+            if (is_leader() && rpc_errs > 0) {
                 ctx_->state_mgr_->peer_connected(entry->second);
             }
             if (rpc_errs >= raft_server::raft_limits_.warning_limit_) {
